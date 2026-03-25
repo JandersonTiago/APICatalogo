@@ -23,7 +23,7 @@ public class ProdutosController : ControllerBase
 
         if (produtos is null)
         {
-            return NotFound("Produtos não encontrados...");
+            return NotFound("Produtos não encontrados..."); // 404 Not Found
         }
         return produtos;
     }
@@ -34,7 +34,7 @@ public class ProdutosController : ControllerBase
         var produto = _context.Produtos.FirstOrDefault(p => p.ProdutoId == id);
         if (produto is null)
         {
-            return NotFound("Produto não encontrado...");
+            return NotFound("Produto não encontrado..."); // 404 Not Found
         }
         return produto;
     }
@@ -44,7 +44,7 @@ public class ProdutosController : ControllerBase
     {
         if (produto is null)
         {
-            return BadRequest("Produto é nulo...");
+            return BadRequest("Produto é nulo..."); // 400 Bad Request - erro de validação
         }
 
         _context.Produtos.Add(produto);
@@ -65,6 +65,21 @@ public class ProdutosController : ControllerBase
         _context.Entry(produto).State = EntityState.Modified;
         _context.SaveChanges();
 
-        return Ok(produto);
+        return Ok(produto); // 200 OK - com conteúdo
+    }
+
+    [HttpDelete("{id:int}")]
+    public ActionResult Delete(int id)
+    {
+        var produto = _context.Produtos.FirstOrDefault(p => p.ProdutoId == id);
+
+        if (produto is null)
+        {
+            return NotFound("Produto não encontrado..."); // 404 Not Found
+        }
+
+        _context.Produtos.Remove(produto);
+        _context.SaveChanges();
+        return Ok(produto); // 200 OK - com conteúdo
     }
 }
