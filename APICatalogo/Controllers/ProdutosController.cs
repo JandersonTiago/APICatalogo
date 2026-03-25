@@ -25,7 +25,7 @@ public class ProdutosController : ControllerBase
         {
             return NotFound("Produtos não encontrados..."); // 404 Not Found
         }
-        return produtos;
+        return Ok(produtos);
     }
 
     [HttpGet("{id:int}", Name = "ObterProduto")]
@@ -36,7 +36,7 @@ public class ProdutosController : ControllerBase
         {
             return NotFound("Produto não encontrado..."); // 404 Not Found
         }
-        return produto;
+        return Ok(produto);
     }
 
     [HttpPost]
