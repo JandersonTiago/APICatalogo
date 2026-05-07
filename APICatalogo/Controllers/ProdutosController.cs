@@ -17,9 +17,9 @@ public class ProdutosController : ControllerBase
     }
 
     [HttpGet]
-    public ActionResult<IEnumerable<Produto>> Get()
+    public async Task<ActionResult<IEnumerable<Produto>>> Get()
     {
-        var produtos = _context.Produtos.AsNoTracking().ToList();
+        var produtos = await _context.Produtos.AsNoTracking().ToListAsync();
 
         if (produtos is null)
         {
@@ -29,9 +29,9 @@ public class ProdutosController : ControllerBase
     }
 
     [HttpGet("{id:int}", Name = "ObterProduto")]
-    public ActionResult<Produto> Get(int id)
+    public async Task<ActionResult<Produto>> Get(int id)
     {
-        var produto = _context.Produtos.FirstOrDefault(p => p.ProdutoId == id);
+        var produto = await _context.Produtos.FirstOrDefaultAsync(p => p.ProdutoId == id);
         if (produto is null)
         {
             return NotFound("Produto não encontrado..."); // 404 Not Found
@@ -40,7 +40,7 @@ public class ProdutosController : ControllerBase
     }
 
     [HttpPost]
-    public ActionResult Post(Produto produto)
+    public async Task<ActionResult> Post(Produto produto)
     {
         if (produto is null)
         {
@@ -48,14 +48,14 @@ public class ProdutosController : ControllerBase
         }
 
         _context.Produtos.Add(produto);
-        _context.SaveChanges();
+        await _context.SaveChangesAsync();
 
         return new CreatedAtRouteResult("ObterProduto",
             new { id = produto.ProdutoId }, produto);
     }
 
     [HttpPut("{id:int}")]
-    public ActionResult Put(int id, Produto produto)
+    public async Task<ActionResult> Put(int id, Produto produto)
     {
         if (id != produto.ProdutoId)
         {
@@ -63,13 +63,13 @@ public class ProdutosController : ControllerBase
         }
 
         _context.Entry(produto).State = EntityState.Modified;
-        _context.SaveChanges();
+        await _context.SaveChangesAsync();
 
         return Ok(produto); // 200 OK - com conteúdo
     }
 
     [HttpDelete("{id:int}")]
-    public ActionResult Delete(int id)
+    public async Task<ActionResult> Delete(int id)
     {
         var produto = _context.Produtos.FirstOrDefault(p => p.ProdutoId == id);
 
@@ -79,7 +79,7 @@ public class ProdutosController : ControllerBase
         }
 
         _context.Produtos.Remove(produto);
-        _context.SaveChanges();
+        await _context.SaveChangesAsync();
         return Ok(produto); // 200 OK - com conteúdo
     }
 }

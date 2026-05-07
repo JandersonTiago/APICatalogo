@@ -17,9 +17,9 @@ public class CategoriasController : ControllerBase
     }
 
     [HttpGet("produtos")]
-    public ActionResult<IEnumerable<Categoria>> Get()
+    public async Task<ActionResult<IEnumerable<Categoria>>> Get()
     {
-        var categorias = _context.Categorias.Include(p => p.Produtos).AsNoTracking().ToList();
+        var categorias =  await _context.Categorias.Include(p => p.Produtos).AsNoTracking().ToListAsync();
 
         if (categorias is null)
         {
@@ -30,9 +30,9 @@ public class CategoriasController : ControllerBase
     }
 
     [HttpGet]
-    public ActionResult<IEnumerable<Categoria>> GetCategoriasProduto()
+    public async Task<ActionResult<IEnumerable<Categoria>>> GetCategoriasProduto()
     {
-        var categorias = _context.Categorias.AsNoTracking().ToList();
+        var categorias = await _context.Categorias.AsNoTracking().ToListAsync();
 
         if (categorias is null)
         {
@@ -43,9 +43,9 @@ public class CategoriasController : ControllerBase
     }
 
     [HttpGet("{id:int}", Name = "ObterCategoria")]
-    public ActionResult<Categoria> Get(int id)
+    public async Task<ActionResult<Categoria>> Get(int id)
     {
-        var categoria = _context.Categorias.FirstOrDefault(c => c.CategoriaId == id);
+        var categoria = await _context.Categorias.FirstOrDefaultAsync(c => c.CategoriaId == id);
 
         if (categoria is null)
         {
@@ -56,7 +56,7 @@ public class CategoriasController : ControllerBase
     }
 
     [HttpPost]
-    public ActionResult Post(Categoria categoria)
+    public async Task<ActionResult> Post(Categoria categoria)
     {
         if (categoria is null)
         {
@@ -64,14 +64,14 @@ public class CategoriasController : ControllerBase
         }
 
         _context.Categorias.Add(categoria);
-        _context.SaveChanges();
+        await _context.SaveChangesAsync();
 
         return new CreatedAtRouteResult("ObterCategoria",
             new { id = categoria.CategoriaId }, categoria);
     }
 
     [HttpPut("{id:int}")]
-    public ActionResult Put(int id, Categoria categoria)
+    public async Task<ActionResult> Put(int id, Categoria categoria)
     {
         if (id != categoria.CategoriaId)
         {
@@ -79,15 +79,15 @@ public class CategoriasController : ControllerBase
         }
 
         _context.Entry(categoria).State = EntityState.Modified;
-        _context.SaveChanges();
+        await _context.SaveChangesAsync();
 
         return Ok(categoria);
     }
 
     [HttpDelete("{id:int}")]
-    public ActionResult Delete(int id)
+    public async Task<ActionResult> Delete(int id)
     {
-        var categoria = _context.Categorias.FirstOrDefault(c => c.CategoriaId == id);
+        var categoria = await _context.Categorias.FirstOrDefaultAsync(c => c.CategoriaId == id);
 
         if (categoria is null)
         {
@@ -95,7 +95,7 @@ public class CategoriasController : ControllerBase
         }
 
         _context.Categorias.Remove(categoria);
-        _context.SaveChanges();
+        await _context.SaveChangesAsync();
 
         return Ok(categoria);
     }
