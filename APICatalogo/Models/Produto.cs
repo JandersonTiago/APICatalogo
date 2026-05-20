@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using APICatalogo.Validations;
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Text.Json.Serialization;
 
@@ -10,8 +11,9 @@ public class Produto
     [Key]
     public int ProdutoId { get; set; }
 
-    [Required]
-    [StringLength(80)]
+    [Required(ErrorMessage = "O nome do produto é obrigatório.")]
+    [StringLength(80, ErrorMessage = "O nome do produto deve ter no máximo {1} e no mínimo {2} caracteres.", MinimumLength = 5)]
+    [PrimeiraLetraMaiuscula]
     public string? Nome { get; set; }
 
     [Required]
@@ -20,6 +22,7 @@ public class Produto
 
     [Required]
     [Column(TypeName = "decimal(10,2)")]
+    [Range(1, 10000, ErrorMessage = "O preço deve ser entre {1} e {2}.")]
     public decimal Preco { get; set; }
 
     [Required]
