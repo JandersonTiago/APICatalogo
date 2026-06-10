@@ -3,6 +3,7 @@ using APICatalogo.Filters;
 using APICatalogo.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
 
 namespace APICatalogo.Controllers;
 
@@ -11,17 +12,19 @@ namespace APICatalogo.Controllers;
 public class CategoriasController : ControllerBase
 {
     private readonly AppDbContext _context;
+    private readonly ILogger<CategoriasController> _logger;
 
-    public CategoriasController(AppDbContext context)
+    public CategoriasController(AppDbContext context, ILogger<CategoriasController> logger)
     {
         _context = context;
+        _logger = logger;
     }
 
     [HttpGet("produtos")]
     [ServiceFilter(typeof(ApiLoggingFilter))]
     public async Task<ActionResult<IEnumerable<Categoria>>> Get()
     {
-        var categorias =  await _context.Categorias.Include(p => p.Produtos).AsNoTracking().ToListAsync();
+        var categorias = await _context.Categorias.Include(p => p.Produtos).AsNoTracking().ToListAsync();
 
         if (categorias is null)
         {
@@ -51,7 +54,8 @@ public class CategoriasController : ControllerBase
 
         if (categoria is null)
         {
-            return NotFound("Categoria não encontrada...");
+            _logger.LogWarning($"Categoria com id= {id} não encontrada...");
+            return NotFound($"Categoria com id= {id} não encontrada...");
         }
 
         return Ok(categoria);
@@ -62,7 +66,8 @@ public class CategoriasController : ControllerBase
     {
         if (categoria is null)
         {
-            return BadRequest("Categoria é nula...");
+            _logger.LogWarning($"Dados inválidos...");
+            return BadRequest("Dados inválidos");
         }
 
         _context.Categorias.Add(categoria);
@@ -77,7 +82,8 @@ public class CategoriasController : ControllerBase
     {
         if (id != categoria.CategoriaId)
         {
-            return BadRequest();
+            _logger.LogWarning($"Dados inválidos...");
+            return BadRequest("Dados inválidos");
         }
 
         _context.Entry(categoria).State = EntityState.Modified;
@@ -93,7 +99,8 @@ public class CategoriasController : ControllerBase
 
         if (categoria is null)
         {
-            return NotFound("Categoria não encontrada...");
+            _logger.LogWarning($"Categoria com id={id} não encontrada...");
+            return NotFound($"Categoria com id={id} não encontrada...");
         }
 
         _context.Categorias.Remove(categoria);
