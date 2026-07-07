@@ -8,17 +8,30 @@ namespace APICatalogo.Controllers;
 [ApiController]
 public class ProdutosController : ControllerBase
 {
-    private readonly IProdutoRepository _repository;
+    private readonly IProdutoRepository _produtoRepository;
+    private readonly IRepository<Produto> _repository;
 
-    public ProdutosController(IProdutoRepository repository)
+    public ProdutosController(IProdutoRepository produtoRepository, IRepository<Produto> repository)
     {
+        _produtoRepository = produtoRepository;
         _repository = repository;
+    }
+
+    [HttpGet("produto/{id}")]
+    public ActionResult<IEnumerable<Produto>> GetProdutosCategoria(int id)
+    {
+        var produtos = _produtoRepository.GetProdutosPorCategoria(id);
+
+        if (produtos is null)
+            return NotFound($"Produtos da categoria com id={id} não encontrados...");
+
+        return Ok(produtos);
     }
 
     [HttpGet]
     public ActionResult<IEnumerable<Produto>> Get()
     {
-        var produtos = _repository.GetProdutos().ToList();
+        var produtos = _repository.GetAll();
 
         if (produtos is null)
             return NotFound("Produtos não encontrados...");
@@ -29,7 +42,7 @@ public class ProdutosController : ControllerBase
     [HttpGet("{id:int}", Name = "ObterProduto")]
     public ActionResult<Produto> Get(int id)
     {
-        var produto = _repository.GetProduto(id);
+        var produto = _repository.Get(p => p.ProdutoId == id);
 
         if (produto is null)
             return NotFound($"Produto com id={id} não encontrada...");
@@ -43,10 +56,10 @@ public class ProdutosController : ControllerBase
         if (produto is null)
             return BadRequest("Produto é nulo...");
 
-        var produtoCriado = _repository.Create(produto);
+        var novoProduto = _repository.Create(produto);
 
         return new CreatedAtRouteResult("ObterProduto",
-            new { id = produtoCriado.ProdutoId }, produtoCriado);
+            new { id = novoProduto.ProdutoId }, novoProduto);
     }
 
     [HttpPut("{id:int}")]
@@ -55,22 +68,27 @@ public class ProdutosController : ControllerBase
         if (id != produto.ProdutoId)
             return BadRequest();
 
-        bool atualizado = _repository.Update(produto);
+        var produtoAtualizado = _repository.Update(produto);
 
-        if (atualizado)
-            return Ok(produto);
+        if (produtoAtualizado is null)
+            return BadRequest("Falha ao atualizar o produto.");
 
-        return StatusCode(500, $"Falha ao atualizar o produto com id={id}.");
+        return Ok(produtoAtualizado);
     }
 
     [HttpDelete("{id:int}")]
     public ActionResult Delete(int id)
     {
-        bool deletado = _repository.Delete(id);
+        var produto = _repository.Get(p => p.ProdutoId == id);
 
-        if (deletado)
-            return Ok($"Produto com id={id} deletado com sucesso.");
+        if (produto is null)
+            return NotFound($"Produto com id={id} não encontrado...");
 
-        return StatusCode(500, $"Falha ao deletar o produto com id={id}.");
+        var produtoDeletado = _repository.Delete(produto);
+
+        if (produtoDeletado is null)
+            return BadRequest("Falha ao deletar o produto.");
+
+        return Ok(produtoDeletado);
     }
 }
