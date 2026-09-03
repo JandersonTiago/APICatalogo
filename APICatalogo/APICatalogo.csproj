@@ -4,21 +4,23 @@
 		<TargetFramework>net9.0</TargetFramework>
 		<Nullable>enable</Nullable>
 		<ImplicitUsings>enable</ImplicitUsings>
-	</PropertyGroup>
+    <UserSecretsId>58a6d4ba-0d12-49c8-b87c-0a5ee2457a50</UserSecretsId>
+  </PropertyGroup>
 
 	<ItemGroup>
-		<PackageReference Include="AutoMapper" Version="12.0.1" />
-		<PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="12.0.1" />
-		<PackageReference Include="Microsoft.AspNetCore.JsonPatch" Version="7.0.13" />
-		<PackageReference Include="Microsoft.AspNetCore.Mvc.NewtonsoftJson" Version="7.0.13" />
-		<PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="9.0.12" />
+		<PackageReference Include="AutoMapper" Version="16.2.0" />
+		<PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="12.0.0" />
+		<PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="9.0.19" />
+		<PackageReference Include="Microsoft.AspNetCore.JsonPatch" Version="9.0.19" />
+		<PackageReference Include="Microsoft.AspNetCore.Mvc.NewtonsoftJson" Version="9.0.19" />
+		<PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="9.0.19" />
 		<PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="9.0.12">
 			<PrivateAssets>all</PrivateAssets>
 			<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
 		</PackageReference>
 		<PackageReference Include="Pomelo.EntityFrameworkCore.MySql" Version="9.0.0" />
-		<PackageReference Include="Swashbuckle.AspNetCore" Version="7.3.2" />
-		<PackageReference Include="X.PagedList.Mvc.Core" Version="8.4.7" />
+		<PackageReference Include="Swashbuckle.AspNetCore" Version="9.0.6" />
+		<PackageReference Include="X.PagedList.Mvc.Core" Version="9.1.2" />
 	</ItemGroup>
 
 </Project>
