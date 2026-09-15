@@ -102,4 +102,51 @@ public class AuthController : ControllerBase
 
         return Ok(new Response { Status = "Success", Message = "User created successfully!" });
     }
+
+    [HttpPost]
+    [Route("refresh-token")]
+    public async Task<IActionResult> RefreshToken(TokenModel tokenModel)
+    {
+        if (tokenModel is null)
+        {
+            return BadRequest("Invalid client request");
+        }
+
+        string? accessToken = tokenModel.AccessToken
+                             ?? throw new ArgumentNullException(nameof(tokenModel));
+
+        string? refreshToken = tokenModel.RefreshToken
+                              ?? throw new ArgumentNullException(nameof(tokenModel));
+
+        var principal = _tokenService.GetPrincipalFromExpiredToken(accessToken!, _configuration);
+
+        if (principal is null)
+        {
+            return BadRequest("Invalid access token/refresh token");
+        }
+
+        string username = principal.Identity.Name;
+
+        var user = await _userManager.FindByNameAsync(username!);
+
+        if (user is null || user.RefreshToken != refreshToken
+                         || user.RefreshTokenExpiryTime <= DateTime.UtcNow)
+        {
+            return BadRequest("Invalid access token/refresh token");
+        }
+
+        var newAccessToken = _tokenService.GenerateAccessToken(
+                                           principal.Claims.ToList(), _configuration);
+
+        var newRefreshToken = _tokenService.GenerateRefreshToken();
+
+        user.RefreshToken = newRefreshToken;
+        await _userManager.UpdateAsync(user);
+
+        return new ObjectResult(new
+        {
+            accessToken = new JwtSecurityTokenHandler().WriteToken(newAccessToken),
+            refreshToken = newRefreshToken
+        });
+    }
 }
