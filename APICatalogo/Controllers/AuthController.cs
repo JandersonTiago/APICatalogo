@@ -32,6 +32,7 @@ public class AuthController : ControllerBase
         _logger = logger;
     }
 
+    [Authorize(Policy = "SuperAdminOnly")]
     [HttpPost]
     [Route("CreateRole")]
     public async Task<IActionResult> CreateRole(string roleName)
@@ -59,6 +60,7 @@ public class AuthController : ControllerBase
             new Response { Status = "Error", Message = $"Role already exists" });
     }
 
+    [Authorize(Policy = "SuperAdminOnly")]
     [HttpPost]
     [Route("AddUserToRole")]
     public async Task<IActionResult> AddUserToRole(string email, string roleName)
@@ -208,7 +210,7 @@ public class AuthController : ControllerBase
         });
     }
 
-    [Authorize]
+    [Authorize(Policy = "ExclusiveOnly")]
     [HttpPost]
     [Route("revoke/{username}")]
     public async Task<IActionResult> Revoke(string username)
