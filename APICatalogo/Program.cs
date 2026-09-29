@@ -32,7 +32,13 @@ builder.Services.AddCors(options =>
     options.AddPolicy(name: OrigensComAcessoPermitido,
     policy =>
     {
-        policy.WithOrigins("http://www.apirequest.io");
+        policy.WithOrigins(
+                "https://apirequest.io",
+                "https://www.apirequest.io",
+                "http://apirequest.io",
+                "http://www.apirequest.io")
+              .AllowAnyHeader()
+              .AllowAnyMethod();
     });
 });
 
