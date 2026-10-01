@@ -25,20 +25,25 @@ builder.Services.AddControllers(options =>
      options.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles;
  }).AddNewtonsoftJson();
 
-var OrigensComAcessoPermitido = "_OrigensComAcessoPermitido";
+//var OrigensComAcessoPermitido = "_OrigensComAcessoPermitido";
 
 builder.Services.AddCors(options =>
 {
-    options.AddPolicy(name: OrigensComAcessoPermitido,
+    options.AddPolicy("OrigensComAcessoPermitido",
     policy =>
     {
-        policy.WithOrigins(
-                "https://apirequest.io",
-                "https://www.apirequest.io",
-                "http://apirequest.io",
-                "http://www.apirequest.io")
-              .AllowAnyHeader()
-              .AllowAnyMethod();
+        //policy.WithOrigins(
+        //        "https://apirequest.io",
+        //        "https://www.apirequest.io",
+        //        "http://apirequest.io",
+        //        "http://www.apirequest.io")
+        //      .WithMethods("GET", "POST")
+        //      .AllowAnyHeader()
+        //      .AllowCredentials();
+        //      .AllowAnyMethod();
+        policy.WithOrigins("https://localhost:7099")
+              .WithMethods("GET", "POST")
+              .AllowAnyHeader();
     });
 });
 
@@ -154,8 +159,8 @@ if (app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 app.UseStaticFiles();
-app.UseRouting();
-app.UseCors(OrigensComAcessoPermitido);
+//app.UseCors(OrigensComAcessoPermitido);
+app.UseCors();
 app.UseAuthentication();
 app.UseAuthorization();
 app.MapControllers();
