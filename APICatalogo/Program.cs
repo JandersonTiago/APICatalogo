@@ -8,11 +8,13 @@ using APICatalogo.Repositories;
 using APICatalogo.Services;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.RateLimiting;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using System.Text;
 using System.Text.Json.Serialization;
+using System.Threading.RateLimiting;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -132,6 +134,19 @@ builder.Services.AddAuthorization(options =>
                                              || context.User.IsInRole("SuperAdmin")));
 });
 
+builder.Services.AddRateLimiter(ratelimiteroptions =>
+{
+    ratelimiteroptions.AddFixedWindowLimiter("fixedwindow", options =>
+    {
+        options.PermitLimit = 1;
+        options.Window = TimeSpan.FromSeconds(5);
+        options.QueueLimit = 2;
+        options.QueueProcessingOrder = QueueProcessingOrder.OldestFirst;
+    });
+    ratelimiteroptions.RejectionStatusCode = StatusCodes.Status429TooManyRequests;
+});
+
+
 builder.Services.AddScoped<ApiLoggingFilter>();
 builder.Services.AddScoped<ICategoriaRepository, CategoriaRepository>();
 builder.Services.AddScoped<IProdutoRepository, ProdutoRepository>();
@@ -159,6 +174,8 @@ if (app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 app.UseStaticFiles();
+app.UseRouting();
+app.UseRateLimiter();
 //app.UseCors(OrigensComAcessoPermitido);
 app.UseCors();
 app.UseAuthentication();
