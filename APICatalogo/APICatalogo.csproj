@@ -4,8 +4,9 @@
 		<TargetFramework>net9.0</TargetFramework>
 		<Nullable>enable</Nullable>
 		<ImplicitUsings>enable</ImplicitUsings>
-    <UserSecretsId>58a6d4ba-0d12-49c8-b87c-0a5ee2457a50</UserSecretsId>
-  </PropertyGroup>
+		<UserSecretsId>58a6d4ba-0d12-49c8-b87c-0a5ee2457a50</UserSecretsId>
+		<GenerateDocumentationFile>True</GenerateDocumentationFile>
+	</PropertyGroup>
 
 	<ItemGroup>
 		<PackageReference Include="Asp.Versioning.Http" Version="8.1.1" />

@@ -27,7 +27,10 @@ public class CategoriasController : ControllerBase
         _uof = uof;
         _logger = logger;
     }
-
+    /// <summary>
+    /// Obtem uma lista de objetos Categoria
+    /// </summary>
+    /// <returns> Uma lista de objetos Categoria</returns>
     //[Authorize]
     [HttpGet]
     [DisableRateLimiting]
@@ -60,6 +63,11 @@ public class CategoriasController : ControllerBase
         return ObterCategorias(categoriasFiltradas);
     }
 
+    /// <summary>
+    /// Obtem uma categoria pelo seu id
+    /// </summary>
+    /// <param name="id"></param>
+    /// <returns>Objetos Categoria</returns>
     [DisableCors]
     [HttpGet("{id:int}", Name = "ObterCategoria")]
     public async Task<ActionResult<CategoriaDTO>> Get(int id)
@@ -96,6 +104,22 @@ public class CategoriasController : ControllerBase
         return Ok(categoriasDto);
     }
 
+    /// <summary>
+    /// Inclui uma nova categoria
+    /// </summary>
+    /// <remarks>
+    /// Exemplo de request:
+    ///     
+    ///     POST API/Categorias
+    ///     {
+    ///         "CategoriaId": 1,
+    ///         "Nome": "Categoria1",
+    ///         "ImagemUrl": "https://google.com.br"
+    ///     }
+    /// </remarks>
+    /// <param name="categoriaDTO">Objeto Categoria</param>
+    /// <returns>O objeto Categoria incluído</returns>
+    /// <remarks>Retorna um objeto Categoria incluído</remarks>
     [HttpPost]
     public async Task<ActionResult<CategoriaDTO>> Post(CategoriaDTO categoriaDTO)
     {
