@@ -7,6 +7,8 @@ namespace APICatalogo.Controllers;
 [ApiController]
 [ApiVersion(3)]
 [ApiVersion(4)]
+// Inibe a exibição da documentação para os endpoints
+[ApiExplorerSettings(IgnoreApi = true)]
 public class TesteV3Controller : ControllerBase
 {
     [HttpGet]

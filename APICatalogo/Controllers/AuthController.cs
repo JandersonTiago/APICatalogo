@@ -11,7 +11,8 @@ namespace APICatalogo.Controllers;
 
 [Route("api/[controller]")]
 [ApiController]
-[ApiExplorerSettings(IgnoreApi = true)]
+// Inibe a exibição da documentação para os endpoints
+//[ApiExplorerSettings(IgnoreApi = true)]
 public class AuthController : ControllerBase
 {
     private readonly ITokenService _tokenService;

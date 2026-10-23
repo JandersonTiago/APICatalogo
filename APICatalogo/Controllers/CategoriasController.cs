@@ -15,7 +15,8 @@ namespace APICatalogo.Controllers;
 [Route("[controller]")]
 [ApiController]
 [EnableRateLimiting("fixedwindow")]
-[ApiExplorerSettings(IgnoreApi = true)]
+// Inibe a exibição da documentação para os endpoints
+//[ApiExplorerSettings(IgnoreApi = true)]
 public class CategoriasController : ControllerBase
 {
     private readonly IUnitOfWork _uof;
