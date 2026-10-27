@@ -13,6 +13,7 @@ namespace APICatalogo.Controllers;
 
 [Route("[controller]")]
 [ApiController]
+[ApiConventionType(typeof(DefaultApiConventions))]
 // Inibe a exibição da documentação para os endpoints
 //[ApiExplorerSettings(IgnoreApi = true)]
 public class ProdutosController : ControllerBase
