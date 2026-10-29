@@ -126,10 +126,12 @@ public class ProdutosController : ControllerBase
     }
 
     [HttpPost]
+    [ProducesResponseType(StatusCodes.Status201Created)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
     public async Task<ActionResult<ProdutoDTO>> Post(ProdutoDTO produtoDto)
     {
         if (produtoDto is null)
-            return BadRequest("Produto é nulo...");
+            return BadRequest();
 
         var produto = _mapper.Map<Produto>(produtoDto);
 
