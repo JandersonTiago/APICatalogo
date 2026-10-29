@@ -8,8 +8,8 @@ namespace APICatalogoxUnitTests.UnitTests;
 
 public class ProdutosUnitTestesController
 {
-    private IUnitOfWork repository;
-    private IMapper mapper;
+    public IUnitOfWork repository;
+    public IMapper mapper;
     public static DbContextOptions<AppDbContext> dbContextOptions { get; }
 
     public static string ConnectionString =
