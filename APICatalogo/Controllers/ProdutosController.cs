@@ -79,16 +79,26 @@ public class ProdutosController : ControllerBase
     /// <returns>Retorna uma lista de objetos Produto</returns>
     [Authorize(Policy = "UserOnly")]
     [HttpGet]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
     public async Task<ActionResult<IEnumerable<ProdutoDTO>>> Get()
     {
-        var produtos = await _uof.ProdutoRepository.GetAllAsync();
+        try
+        {
+            var produtos = await _uof.ProdutoRepository.GetAllAsync();
 
-        if (produtos is null)
-            return NotFound("Produtos não encontrados...");
+            if (produtos is null)
+                return NotFound("Produtos não encontrados...");
 
-        var produtosDto = _mapper.Map<IEnumerable<ProdutoDTO>>(produtos);
+            var produtosDto = _mapper.Map<IEnumerable<ProdutoDTO>>(produtos);
 
-        return Ok(produtosDto);
+            return Ok(produtosDto);
+        }
+        catch (Exception)
+        {
+            return BadRequest();
+        }
     }
 
     /// <summary>
@@ -97,8 +107,14 @@ public class ProdutosController : ControllerBase
     /// <param name="id">Codigo do produto</param>
     /// <returns>Um objeto Produto</returns>
     [HttpGet("{id:int}", Name = "ObterProduto")]
-    public async Task<ActionResult<ProdutoDTO>> Get(int id)
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    public async Task<ActionResult<ProdutoDTO>> Get(int? id)
     {
+        if (id is null || id <= 0)
+            return BadRequest("Id de produto inválido.");
+
         var produto = await _uof.ProdutoRepository.GetAsync(p => p.ProdutoId == id);
 
         if (produto is null)
