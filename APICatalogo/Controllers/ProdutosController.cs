@@ -171,6 +171,9 @@ public class ProdutosController : ControllerBase
     }
 
     [HttpPut("{id:int}")]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesDefaultResponseType]
     public async Task<ActionResult<ProdutoDTO>> Put(int id, ProdutoDTO produtoDto)
     {
         if (id != produtoDto.ProdutoId)
@@ -181,8 +184,8 @@ public class ProdutosController : ControllerBase
         var produtoAtualizado = _uof.ProdutoRepository.Update(produto);
         await _uof.CommitAsync();
 
-        if (produtoAtualizado is null)
-            return BadRequest("Falha ao atualizar o produto.");
+        //if (produtoAtualizado is null)
+        //    return BadRequest("Falha ao atualizar o produto.");
 
         var produtoAtualizadoDto = _mapper.Map<ProdutoDTO>(produtoAtualizado);
 
