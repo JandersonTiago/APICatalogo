@@ -193,6 +193,8 @@ public class ProdutosController : ControllerBase
     }
 
     [HttpDelete("{id:int}")]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
     public async Task<ActionResult<ProdutoDTO>> Delete(int id)
     {
         var produto = await _uof.ProdutoRepository.GetAsync(p => p.ProdutoId == id);
@@ -203,8 +205,8 @@ public class ProdutosController : ControllerBase
         var produtoDeletado = _uof.ProdutoRepository.Delete(produto);
         await _uof.CommitAsync();
 
-        if (produtoDeletado is null)
-            return BadRequest("Falha ao deletar o produto.");
+        //if (produtoDeletado is null)
+        //    return BadRequest("Falha ao deletar o produto.");
 
         var produtoDeletadoDto = _mapper.Map<ProdutoDTO>(produtoDeletado);
 
